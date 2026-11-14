@@ -1,0 +1,162 @@
+<!doctype html>
+<!-- Source for docs/a2ui-flow.gif. render.py drives it with ?t=<seconds> via window.at(t). -->
+<meta charset="utf-8">
+<title>A2UI flow animation</title>
+<style>
+  :root { --navy:#0F1623; --alt:#1A1F2B; --white:#FFFFFF; --orange:#FF7A33; --grey:#8A93A6; }
+  * { box-sizing: border-box; margin: 0; }
+  html, body { width: 1080px; height: 1350px; background: var(--navy); overflow: hidden; }
+  body { position: relative; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--white); }
+  .abs { position: absolute; }
+  .box { position: absolute; border: 3px solid var(--white); border-radius: 18px; background: var(--navy); }
+  .box.dashed { border: 3px dashed var(--grey); }
+  .label { font-weight: 800; font-size: 34px; }
+  .sub { color: var(--grey); font-weight: 600; font-size: 22px; margin-top: 4px; }
+  .head { position: absolute; left: 28px; top: 22px; }
+
+  #caption { left: 80px; top: 70px; width: 920px; height: 110px; display: flex; align-items: center; gap: 22px; }
+  #num { width: 74px; height: 74px; border-radius: 50%; background: var(--orange); color: var(--navy);
+         font-weight: 900; font-size: 40px; display: flex; align-items: center; justify-content: center; flex: none; }
+  #captext { font-weight: 800; font-size: 52px; line-height: 1.05; letter-spacing: -0.5px; }
+
+  #code { position: absolute; left: 28px; top: 112px; right: 28px; font: 600 25px/1.55 Menlo, "SF Mono", monospace; }
+  #code div { white-space: pre; color: var(--grey); opacity: 0; }
+  #code div.on { opacity: 1; }
+  #code b { color: var(--white); font-weight: 700; }
+  #code i { font-style: normal; color: var(--orange); font-weight: 700; }
+
+  .chips { position: absolute; left: 26px; top: 78px; display: flex; gap: 8px; }
+  .chip { font-weight: 700; font-size: 19px; padding: 6px 11px 6px 9px; border-radius: 999px; background: var(--alt);
+          border: 2px solid #2b3446; opacity: 0; }
+  .chip.on { opacity: 1; }
+  .chip span { color: var(--white); margin-right: 6px; }
+
+  #card { position: absolute; left: 26px; top: 76px; right: 26px; background: var(--alt); border-radius: 14px; padding: 14px 20px 16px; opacity: 0; }
+  #card .row { display: flex; justify-content: space-between; align-items: baseline; }
+  #card .m { font-weight: 800; font-size: 28px; }
+  #card .amt { font-weight: 900; font-size: 34px; }
+  #card .paid { margin-top: 8px; font-size: 21px; color: var(--grey); font-weight: 600; display: flex; align-items: center; gap: 10px; }
+  #slot { font: 700 19px Menlo, monospace; color: var(--grey); border: 2px dashed var(--grey); border-radius: 8px; padding: 3px 8px; }
+  #slot.real { font: 800 21px "Helvetica Neue", Helvetica, Arial, sans-serif; color: var(--navy); background: var(--orange); border: 2px solid var(--orange); }
+  #btn { margin-top: 12px; display: inline-block; border: 2px solid var(--white); border-radius: 10px; padding: 9px 18px; font-weight: 800; font-size: 21px; }
+  #btn.press { background: var(--white); color: var(--navy); }
+
+  .srv { position: absolute; left: 28px; right: 22px; font-weight: 600; font-size: 22px; color: var(--grey); line-height: 1.35; }
+  .srv.hot { color: var(--white); }
+  .srv.hotO { color: var(--orange); }
+
+  .line { position: absolute; background: var(--white); }
+  .tag { position: absolute; font-weight: 800; font-size: 24px; }
+  .dot { position: absolute; width: 26px; height: 26px; border-radius: 50%; margin: -13px 0 0 -13px; opacity: 0; }
+  #never { position: absolute; right: 28px; top: 26px; font-weight: 800; font-size: 21px; color: var(--orange);
+           border: 2px solid var(--orange); border-radius: 999px; padding: 5px 13px; opacity: 0; }
+</style>
+
+<div id="caption" class="abs"><div id="num">1</div><div id="captext"></div></div>
+
+<!-- Model -->
+<div class="box dashed" style="left:80px; top:230px; width:920px; height:400px">
+  <div class="head"><div class="label">Model</div><div class="sub">writes a layout note</div></div>
+  <div id="never">never sees the card</div>
+  <div id="code">
+    <div>&lt;a2ui&gt;</div>
+    <div>r = <b>ReceiptCard</b>($/receipt/merchant, $/receipt/total,</div>
+    <div>                paidWith=<i>$/employee/card</i>)</div>
+    <div>b = <b>BudgetMeter</b>($/budget/spent, $/budget/limit)</div>
+    <div>go = <b>Button</b>(Text("Submit"), action=Event("submit"))</div>
+    <div>root = <b>Column</b>([r, b, go])</div>
+    <div>&lt;/a2ui&gt;</div>
+  </div>
+</div>
+
+<!-- Catalog check -->
+<div class="box" style="left:80px; top:740px; width:520px; height:140px">
+  <div class="head" style="top:18px"><div class="label">Catalog check</div></div>
+  <div class="chips">
+    <div class="chip"><span>✓</span>ReceiptCard</div>
+    <div class="chip"><span>✓</span>BudgetMeter</div>
+    <div class="chip"><span>✓</span>Button</div>
+  </div>
+</div>
+
+<!-- Your components -->
+<div class="box" style="left:80px; top:990px; width:520px; height:270px">
+  <div class="head" style="top:18px"><div class="label">Your components</div></div>
+  <div id="card">
+    <div class="row"><span class="m">Nopa</span><span class="amt">$186.40</span></div>
+    <div class="paid">Paid with <span id="slot">$/employee/card</span></div>
+    <div id="btn">Submit</div>
+  </div>
+</div>
+
+<!-- Your server -->
+<div class="box" style="left:700px; top:740px; width:300px; height:520px">
+  <div class="head" style="top:18px"><div class="label">Your server</div></div>
+  <div id="s1" class="srv" style="top:90px">Facts: Nopa, $186.40, over the dinner limit</div>
+  <div id="s2" class="srv" style="top:250px">Card: Visa •• 4417</div>
+  <div id="s3" class="srv" style="top:330px">Rules and actions</div>
+</div>
+
+<!-- connectors -->
+<div class="line" style="left:338px; top:630px; width:4px; height:110px"></div>
+<div class="line" style="left:338px; top:880px; width:4px; height:110px"></div>
+<div class="line" style="left:848px; top:630px; width:4px; height:110px; background:var(--grey)"></div>
+<div class="tag" style="left:872px; top:668px; color:var(--grey)">Facts</div>
+<div class="line" style="left:600px; top:1068px; width:100px; height:4px; background:var(--grey)"></div>
+<div class="tag" style="left:612px; top:1030px; color:var(--grey); font-size:20px">Clicks</div>
+<div class="line" style="left:600px; top:1198px; width:100px; height:6px; background:var(--orange)"></div>
+<div class="tag" style="left:604px; top:1212px; color:var(--orange); font-size:20px">Real data</div>
+
+<div id="dot" class="dot"></div>
+
+<script>
+const $ = id => document.getElementById(id);
+const clamp = v => Math.max(0, Math.min(1, v));
+const ease = p => p < .5 ? 2*p*p : 1 - Math.pow(-2*p + 2, 2) / 2;
+const SCENES = [
+  [0,    1, 'Your server shares safe facts'],
+  [2.4,  2, 'The model writes a layout note'],
+  [6.6,  3, 'The catalog checks every part'],
+  [9.0,  4, 'Your components draw it'],
+  [11.2, 5, 'Real data skips the model'],
+  [14.0, 6, 'Clicks go back to your server'],
+  [16.4, 0, 'Model arranges. Server decides.'],
+];
+function moveDot(t, t0, dur, x0, y0, x1, y1, color) {
+  const p = (t - t0) / dur;
+  if (p < 0 || p > 1) return false;
+  const e = ease(p), d = $('dot');
+  d.style.left = (x0 + (x1 - x0) * e) + 'px';
+  d.style.top = (y0 + (y1 - y0) * e) + 'px';
+  d.style.background = color; d.style.opacity = 1;
+  return true;
+}
+window.at = function (t) {
+  const s = [...SCENES].reverse().find(x => t >= x[0]);
+  $('num').style.display = s[1] ? 'flex' : 'none';
+  $('num').textContent = s[1];
+  $('captext').textContent = s[2];
+
+  $('dot').style.opacity = 0;
+  moveDot(t, 0.5, 1.2, 850, 740, 850, 630, '#8A93A6');          // facts: server → model
+  moveDot(t, 6.8, 1.0, 340, 630, 340, 740, '#FFFFFF');          // note: model → catalog
+  moveDot(t, 9.1, 1.0, 340, 880, 340, 990, '#FFFFFF');          // ok'd note: catalog → components
+  moveDot(t, 11.6, 1.1, 700, 1201, 600, 1201, '#FF7A33');       // real data: server → components
+  moveDot(t, 14.6, 1.1, 600, 1070, 700, 1070, '#8A93A6');       // click: components → server
+
+  $('s1').className = 'srv' + (t >= 0.2 && t < 2.4 ? ' hot' : '');
+  $('s2').className = 'srv' + (t >= 11.3 && t < 14 ? ' hotO' : '');
+  $('s3').className = 'srv' + (t >= 15.6 && t < 16.4 ? ' hot' : '');
+
+  [...$('code').children].forEach((el, i) => el.classList.toggle('on', t >= 2.7 + i * 0.45));
+  document.querySelectorAll('.chip').forEach((el, i) => el.classList.toggle('on', t >= 7.9 + i * 0.35));
+  $('card').style.opacity = clamp((t - 10.1) / 0.4);
+  const real = t >= 12.6;
+  $('slot').className = real ? 'real' : '';
+  $('slot').textContent = real ? 'Visa •• 4417' : '$/employee/card';
+  $('never').style.opacity = t >= 12.9 && t < 14 ? 1 : 0;
+  $('btn').className = t >= 14.3 && t < 14.8 ? 'press' : '';
+};
+const q = new URLSearchParams(location.search).get('t');
+window.at(q === null ? 16.5 : Number(q));
+</script>
