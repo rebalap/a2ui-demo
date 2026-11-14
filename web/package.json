@@ -1,0 +1,27 @@
+{
+  "name": "expense-copilot-web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@a2ui/react": "0.15.0",
+    "@a2ui/web_core": "0.15.0",
+    "markdown-it": "14.3.3",
+    "react": "19.2.8",
+    "react-dom": "19.2.8",
+    "zod": "3.25.76"
+  },
+  "devDependencies": {
+    "@types/markdown-it": "14.2.0",
+    "@types/react": "19.2.18",
+    "@types/react-dom": "19.2.5",
+    "@vitejs/plugin-react": "6.2.1",
+    "typescript": "5.9.3",
+    "vite": "8.2.2"
+  }
+}

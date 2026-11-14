@@ -1,0 +1,18 @@
+# Python
+.venv/
+__pycache__/
+*.pyc
+
+# Node / build
+web/node_modules/
+web/dist/
+
+# Secrets and local settings
+.env
+.env.*
+*.key
+
+# OS / editors
+.DS_Store
+.vscode/
+.idea/
