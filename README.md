@@ -9,6 +9,8 @@ when the manager approves, the employee's card updates live.
 Built on [A2UI](https://github.com/a2ui-project), the open protocol for agent-driven UI, using the
 official SDKs: `a2ui-agent-sdk` (Python) and `@a2ui/react` / `@a2ui/web_core`.
 
+![Expense Copilot: the employee's chat with a receipt card, budget meter and business purpose on the left, the manager's phone showing the approval card in the middle, and the inspector listing the values the server filled in without the model seeing them on the right](docs/app-screenshot.png)
+
 ![How the flow works: the model writes a layout, the catalog check validates it, your components render it, and your server fills private values directly](docs/a2ui-flow.png)
 
 ## How it works
